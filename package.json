@@ -1,0 +1,16 @@
+{
+  "name": "example-project",
+  "version": "1.0.0",
+  "description": "A collection of exercises completed as part of CodeSpace Academy's Dynamic Web Apps (DWA)\r course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.41.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
