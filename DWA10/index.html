@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DWA10 Tally Count</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist/themes/light.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist/themes/dark.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist/shoelace-autoloader.js"
+    ></script>
+
+    <link rel="stylesheet" href="/DWA10/styles.css" />
+    <script type="module" defer src="/DWA10/scripts.js"></script>
+  </head>
+  <header>
+    <h1>Tally Count</h1>
+  </header>
+  <body>
+    <sl-dropdown>
+      <sl-button slot="trigger" caret>Actions</sl-button>
+      <sl-menu>
+        <sl-menu-item data-key="reset">
+          Reset Counter
+          <sl-icon slot="suffix" name="arrow-counterclockwise"></sl-icon>
+        </sl-menu-item>
+      </sl-menu>
+    </sl-dropdown>
+
+    <sl-split-panel vertical style="height: 100vh">
+      <div
+        data-key="number"
+        slot="start"
+        style="
+          height: 50vh;
+          background: var(--sl-color-neutral-50);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        0
+      </div>
+      <div
+        slot="end"
+        style="
+          height: 30vh;
+          background: var(--sl-color-neutral-50);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <sl-split-panel class="inner-split-panel">
+          <div
+            slot="start"
+            style="
+              height: 30vh;
+              background: var(--sl-color-neutral-50);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <sl-button circle size="large" data-key="subtract"
+              ><sl-icon name="dash" label="Settings"></sl-icon
+            ></sl-button>
+          </div>
+          <div
+            slot="end"
+            style="
+              height: 30vh;
+              background: var(--sl-color-neutral-50);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <sl-button circle size="large" data-key="add"
+              ><sl-icon name="plus" label="Settings"></sl-icon
+            ></sl-button>
+          </div>
+        </sl-split-panel>
+      </div>
+    </sl-split-panel>
+
+    <sl-dialog class="dialog-width" style="--width: 50vw">
+      <strong>The counter has been reset</strong>
+      <sl-button slot="footer" variant="primary">Close</sl-button>
+    </sl-dialog>
+  </body>
+</html>

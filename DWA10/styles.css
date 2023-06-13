@@ -1,0 +1,23 @@
+body {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+[data-key="number"] {
+    font-size: 8rem;
+    font-weight: 700;
+}
+
+sl-split-panel {
+    width: 80%;
+    align-self: center;
+    margin: 2%;
+    --divider-width: 2px
+}
+
+.inner-split-panel {
+    width: 100%;
+}
