@@ -2,9 +2,9 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-restricted-syntax */
 
-import { authors } from '../modules/data.js'
+import { authors, books } from "../modules/data.js";
 
-const template = document.createElement('template')
+const template = document.createElement("template");
 
 template.innerHTML = /* html */ `
 <style>
@@ -134,7 +134,7 @@ template.innerHTML = /* html */ `
     }
 </style>
 
-<dialog class="wrapper" data-list-active open>
+<dialog class="wrapper" data-list-active>
     <div class="preview">
         <img class="blur" data-list-blur src=""/>
         <img class="image" data-list-image src=""/>
@@ -150,66 +150,86 @@ template.innerHTML = /* html */ `
         <button class="button button_primary" data-list-close>Close</button>
     </div>
 </dialog>
-`
+`;
 
 class ActivePreview extends HTMLElement {
-    #active = undefined;
+  #event = undefined;
 
-    /**
-    * @type {Object}
-    */
-    #elements = {
-        overlay: undefined,
-        blur: undefined,
-        image: undefined,
-        title: undefined,
-        subtitle: undefined,
-        description: undefined,
-        close: undefined,
+  /**
+   * @type {Object}
+   */
+  #elements = {
+    overlay: undefined,
+    blur: undefined,
+    image: undefined,
+    title: undefined,
+    subtitle: undefined,
+    description: undefined,
+    close: undefined,
+  };
+
+  /**
+   * @type {ShadowRoot}
+   */
+  #inner = this.attachShadow({ mode: "open" });
+
+  constructor() {
+    super();
+    const { content } = template;
+    this.#inner.appendChild(content.cloneNode(true));
+  }
+
+  connectedCallback() {
+    this.#elements = {
+      overlay: this.#inner.querySelector("[data-list-active]"),
+      blur: this.#inner.querySelector("[data-list-blur]"),
+      image: this.#inner.querySelector("[data-list-image]"),
+      title: this.#inner.querySelector("[data-list-title]"),
+      subtitle: this.#inner.querySelector("[data-list-subtitle]"),
+      description: this.#inner.querySelector("[data-list-description]"),
+      close: this.#inner.querySelector("[data-list-close]"),
+    };
+
+    this.#elements.close.addEventListener("click", () => {
+      this.#elements.overlay.open = false;
+    });
+  }
+
+  get event() {
+    return this.#event;
+  }
+
+  /**
+   * @param {Object} event - triggered by event listener on book preview clicked
+   */
+  set event(event) {
+    const pathArray = Array.from(event.path || event.composedPath());
+    let active = null;
+    for (const node of pathArray) {
+      if (active) break;
+
+      if (node?.dataset?.preview) {
+        let result = null;
+
+        for (const singleBook of books) {
+          if (result) break;
+          if (singleBook.id === node?.dataset?.preview) result = singleBook;
+        }
+
+        active = result;
+      }
     }
 
-    /**
-    * @type {ShadowRoot}
-    */
-    #inner = this.attachShadow({ mode: "open" });
+    this.#elements.blur.src = active.image;
+    this.#elements.image.src = active.image;
+    this.#elements.title.innerText = active.title;
+    this.#elements.subtitle.innerText = `${authors[active.author]} (${new Date(
+      active.published
+    ).getFullYear()})`;
+    this.#elements.description.innerText = active.description;
 
-    constructor() {
-        super();
-        const { content } = template;
-        this.#inner.appendChild(content.cloneNode(true));
-    }
-
-    connectedCallback() {
-        this.#elements = {
-            overlay: this.#inner.querySelector('[data-list-active]'),
-            blur: this.#inner.querySelector('[data-list-blur]'),
-            image: this.#inner.querySelector('[data-list-image]'),
-            title: this.#inner.querySelector('[data-list-title]'),
-            subtitle: this.#inner.querySelector('[data-list-subtitle]'),
-            description: this.#inner.querySelector('[data-list-description]'),
-            close: this.#inner.querySelector('[data-list-close]'),
-        };
-
-        this.#elements.close.addEventListener('click', () => {
-            this.#elements.overlay.open = false
-        })
-    }
-
-    get active () {
-        return this.#active
-    }
-
-    /**
-     * @param {Object} newActive
-     */
-    set active (newActive) {
-        this.#elements.blur.src = newActive.image;
-        this.#elements.image.src = newActive.image;
-        this.#elements.title.innerText = newActive.title;
-        this.#elements.subtitle.innerText = `${authors[newActive.author]} (${new Date(newActive.published).getFullYear()})`;
-        this.#elements.description.innerText = newActive.description
-    }
+    this.#elements.overlay.open = true;
+  }
 }
 
-customElements.define("active-preview", ActivePreview)
-    
+customElements.define("active-preview", ActivePreview);
